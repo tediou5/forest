@@ -173,15 +173,3 @@ impl ElectionProof {
         j
     }
 }
-
-#[cfg(test)]
-impl quickcheck::Arbitrary for ElectionProof {
-    fn arbitrary(g: &mut quickcheck::Gen) -> Self {
-        let fmt_str = format!("===={}=====", u64::arbitrary(g));
-        let vrfproof = VRFProof::new(fmt_str.into_bytes());
-        Self {
-            win_count: i64::arbitrary(g),
-            vrfproof,
-        }
-    }
-}

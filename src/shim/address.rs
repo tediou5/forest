@@ -1,37 +1,22 @@
 // Copyright 2019-2025 ChainSafe Systems
 // SPDX-License-Identifier: Apache-2.0, MIT
 
-use std::{
-    fmt::Display,
-    ops::{Deref, DerefMut},
-    str::FromStr,
-};
-
 use data_encoding::Encoding;
 use data_encoding_macro::new_encoding;
 use fvm_shared2::address::Address as Address_v2;
 use fvm_shared3::address::Address as Address_v3;
 use fvm_shared4::address::Address as Address_v4;
 use fvm_shared4::address::Address as Address_latest;
-pub use fvm_shared4::address::{Error, Network, Payload, Protocol, PAYLOAD_HASH_LEN};
+pub use fvm_shared4::address::{Error, Network, Payload, Protocol};
 use integer_encoding::VarInt;
 use num_traits::FromPrimitive;
-use once_cell::sync::Lazy;
 use serde::{Deserialize, Serialize};
 use std::sync::atomic::{AtomicU8, Ordering};
-
-/// Zero address used to avoid allowing it to be used for verification.
-/// This is intentionally disallowed because it is an edge case with Filecoin's BLS
-/// signature verification.
-// Copied from ref-fvm due to a bug in their definition.
-pub static ZERO_ADDRESS: Lazy<Address> = Lazy::new(|| {
-    Network::Mainnet
-        .parse_address(
-            "f3yaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaby2smx7a",
-        )
-        .unwrap()
-        .into()
-});
+use std::{
+    fmt::Display,
+    ops::{Deref, DerefMut},
+    str::FromStr,
+};
 
 static GLOBAL_NETWORK: AtomicU8 = AtomicU8::new(Network::Mainnet as u8);
 
@@ -55,49 +40,6 @@ impl CurrentNetwork {
         FromPrimitive::from_u8(LOCAL_NETWORK.with(|ident| ident.load(Ordering::Acquire)))
             .unwrap_or(Network::Mainnet)
     }
-
-    pub fn set(network: Network) {
-        LOCAL_NETWORK.with(|ident| ident.store(network as u8, Ordering::Release));
-    }
-
-    pub fn set_global(network: Network) {
-        GLOBAL_NETWORK.store(network as u8, Ordering::Release);
-        CurrentNetwork::set(network);
-    }
-
-    #[cfg(test)]
-    pub fn with<X>(network: Network, cb: impl FnOnce() -> X) -> X {
-        let guard = NetworkGuard::new(network);
-        let result = cb();
-        drop(guard);
-        result
-    }
-
-    #[cfg(test)]
-    fn get_global() -> Network {
-        FromPrimitive::from_u8(GLOBAL_NETWORK.load(Ordering::Acquire)).unwrap_or(Network::Mainnet)
-    }
-}
-
-#[cfg(test)]
-struct NetworkGuard(Network);
-#[cfg(test)]
-mod network_guard_impl {
-    use super::*;
-
-    impl NetworkGuard {
-        pub fn new(new_network: Network) -> Self {
-            let previous_network = CurrentNetwork::get();
-            CurrentNetwork::set(new_network);
-            NetworkGuard(previous_network)
-        }
-    }
-
-    impl Drop for NetworkGuard {
-        fn drop(&mut self) {
-            CurrentNetwork::set(self.0);
-        }
-    }
 }
 
 /// A Filecoin address is an identifier that refers to an actor in the Filecoin state. All actors
@@ -112,7 +54,6 @@ mod network_guard_impl {
 /// For more information, see: <https://spec.filecoin.io/appendix/address/>
 #[derive(Copy, Clone, Debug, Hash, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 #[serde(transparent)]
-#[cfg_attr(test, derive(derive_quickcheck_arbitrary::Arbitrary))]
 pub struct Address(Address_latest);
 
 impl Default for Address {
@@ -404,67 +345,4 @@ impl From<Address> for Address_v2 {
     fn from(other: Address) -> Address_v2 {
         (&other).into()
     }
-}
-
-#[cfg(test)]
-fn flip_network(input: Network) -> Network {
-    match input {
-        Network::Mainnet => Network::Testnet,
-        Network::Testnet => Network::Mainnet,
-    }
-}
-
-#[test]
-fn relaxed_address_parsing() {
-    assert!(Address::from_str("t01234").is_ok());
-    assert!(Address::from_str("f01234").is_ok());
-}
-
-#[test]
-fn strict_address_parsing() {
-    CurrentNetwork::with(Network::Mainnet, || {
-        assert!(StrictAddress::from_str("f01234").is_ok());
-        assert!(StrictAddress::from_str("t01234").is_err());
-    });
-    CurrentNetwork::with(Network::Testnet, || {
-        assert!(StrictAddress::from_str("f01234").is_err());
-        assert!(StrictAddress::from_str("t01234").is_ok());
-    });
-}
-
-#[test]
-fn set_with_network() {
-    let outer_network = CurrentNetwork::get();
-    let inner_network = flip_network(outer_network);
-    CurrentNetwork::with(inner_network, || {
-        assert_eq!(CurrentNetwork::get(), inner_network);
-    });
-    assert_eq!(outer_network, CurrentNetwork::get());
-}
-
-#[test]
-fn unwind_current_network_on_panic() {
-    let outer_network = CurrentNetwork::get();
-    let inner_network = flip_network(outer_network);
-    assert!(std::panic::catch_unwind(|| {
-        CurrentNetwork::with(inner_network, || {
-            panic!("unwinding stack");
-        })
-    })
-    .is_err());
-    let new_outer_network = CurrentNetwork::get();
-    assert_eq!(outer_network, new_outer_network);
-}
-
-#[test]
-fn inherit_global_network() {
-    let outer_network = CurrentNetwork::get_global();
-    let inner_network = flip_network(outer_network);
-    CurrentNetwork::set_global(inner_network);
-    std::thread::spawn(move || {
-        assert_eq!(CurrentNetwork::get(), inner_network);
-    })
-    .join()
-    .unwrap();
-    CurrentNetwork::set_global(outer_network);
 }

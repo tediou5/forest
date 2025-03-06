@@ -22,12 +22,3 @@ impl Ticket {
         Self { vrfproof }
     }
 }
-
-#[cfg(test)]
-impl quickcheck::Arbitrary for Ticket {
-    fn arbitrary(g: &mut quickcheck::Gen) -> Self {
-        let fmt_str = format!("===={}=====", u64::arbitrary(g));
-        let vrfproof = VRFProof::new(fmt_str.into_bytes());
-        Self { vrfproof }
-    }
-}

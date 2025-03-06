@@ -10,7 +10,6 @@ use serde_tuple::{self, Deserialize_tuple, Serialize_tuple};
 /// The entry contains the round, or epoch as well as the BLS signature for that
 /// round of randomness.
 /// This beacon entry is stored on chain in the block header.
-#[cfg_attr(test, derive(derive_quickcheck_arbitrary::Arbitrary))]
 #[derive(
     Clone, Debug, Default, Eq, PartialEq, Hash, Ord, PartialOrd, Serialize_tuple, Deserialize_tuple,
 )]

@@ -1,28 +1,22 @@
 // Copyright 2019-2025 ChainSafe Systems
 // SPDX-License-Identifier: Apache-2.0, MIT
 
-use std::{
-    fmt,
-    ops::{Add, AddAssign, Deref, DerefMut, Mul, MulAssign, Sub, SubAssign},
-};
-
-use super::fvm_shared_latest::econ::TokenAmount as TokenAmount_latest;
+use crate::shim::fvm_shared_latest::econ::TokenAmount as TokenAmount_latest;
 use fvm_shared2::econ::TokenAmount as TokenAmount_v2;
 use fvm_shared3::econ::TokenAmount as TokenAmount_v3;
 pub use fvm_shared3::{BLOCK_GAS_LIMIT, TOTAL_FILECOIN_BASE};
 use fvm_shared4::econ::TokenAmount as TokenAmount_v4;
 use num_bigint::BigInt;
 use num_traits::Zero;
-use once_cell::sync::Lazy;
 use serde::{Deserialize, Serialize};
 use static_assertions::const_assert_eq;
+use std::{
+    fmt,
+    ops::{Add, AddAssign, Deref, DerefMut, Mul, MulAssign, Sub, SubAssign},
+};
 
 const_assert_eq!(BLOCK_GAS_LIMIT, fvm_shared2::BLOCK_GAS_LIMIT as u64);
 const_assert_eq!(TOTAL_FILECOIN_BASE, fvm_shared2::TOTAL_FILECOIN_BASE);
-
-/// Total Filecoin available to the network.
-pub static TOTAL_FILECOIN: Lazy<TokenAmount> =
-    Lazy::new(|| TokenAmount::from_whole(TOTAL_FILECOIN_BASE));
 
 #[derive(Clone, PartialEq, Eq, Ord, PartialOrd, Hash, Serialize, Deserialize, Default)]
 #[serde(transparent)]
@@ -31,25 +25,6 @@ pub struct TokenAmount(TokenAmount_latest);
 impl fmt::Debug for TokenAmount {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         fmt::Debug::fmt(&self.0, f)
-    }
-}
-
-#[cfg(test)]
-impl quickcheck::Arbitrary for TokenAmount {
-    fn arbitrary(g: &mut quickcheck::Gen) -> Self {
-        use fvm_shared4::bigint::MAX_BIGINT_SIZE;
-        use num::BigUint;
-        // During serialization/deserialization, permissible length of the byte
-        // representation (plus a leading positive sign byte for non-zero
-        // values) of BigInts is currently set to a max of MAX_BIGINT_SIZE with
-        // a value of 128; need to constrain the corresponding length during
-        // `Arbitrary` generation of `BigInt` in `TokenAmount` to below
-        // MAX_BIGINT_SIZE.
-        // The 'significant_bits' variable changes the distribution from uniform
-        // to log-scaled.
-        let significant_bits = usize::arbitrary(g) % ((MAX_BIGINT_SIZE - 1) * 8);
-        let bigint_upper_limit = BigUint::from(1u8) << significant_bits;
-        TokenAmount::from_atto(BigUint::arbitrary(g) % bigint_upper_limit)
     }
 }
 

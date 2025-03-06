@@ -16,25 +16,13 @@ anyhow = "1"
 cid = { version = "0.11", default-features = false, features = ["std"] }
 flume = "0.11"
 futures = "0.3"
-libp2p = { version = "0.55", default-features = false }
-libp2p-swarm-test = { version = "0.5", default-features = false, features = ["tokio"] }
 multihash-codetable = { version = "0.1", features = ["blake2b", "blake2s", "blake3", "sha2", "sha3", "strobe"] }
-rust2go = "0.4"
 tokio = "1"
 
 [dependencies]
 ahash = "0.8"
-anes = "0.2"
 anyhow = { workspace = true }
-argon2 = "0.5"
-async-compression = { version = "0.4", features = ["tokio", "zstd"] }
-async-fs = "2"
 async-trait = "0.1"
-asynchronous-codec = "0.7"
-axum = "0.8"
-backon = "1"
-base64 = "0.22"
-bigdecimal = "0.4"
 blake2b_simd = "1"
 bls-signatures = { version = "0.15", default-features = false, features = [
   "multicore",
@@ -49,38 +37,15 @@ cfg-vis = "0.3"
 chrono = { version = "0.4", default-features = false, features = ["clock"] }
 cid = { workspace = true }
 cid_0_10 = { package = "cid", version = "0.10", default-features = false, features = ["std"] }
-clap = { version = "4", features = ["derive"] }
-colored = "3"
-crypto_secretbox = "0.1"
-daemonize-me = "2"
 data-encoding = "2"
 data-encoding-macro = "0.1"
-derive_builder = "0.20"
 derive_more = { version = "2", features = ["from", "into"] }
-dialoguer = "0.11"
 digest = "0.10"
-directories = "6"
 displaydoc = "0.2"
 either = "1"
 ethereum-types = { version = "0.15", features = ["ethbloom"] }
-ez-jsonrpc-types = "0.5"
-fil_actor_account_state = { version = "19" }
-fil_actor_cron_state = { version = "19" }
-fil_actor_datacap_state = { version = "19" }
-fil_actor_eam_state = { version = "19" }
-fil_actor_evm_state = { version = "19" }
-fil_actor_init_state = { version = "19" }
-fil_actor_market_state = { version = "19" }
-fil_actor_miner_state = { version = "19" }
-fil_actor_multisig_state = { version = "19" }
-fil_actor_power_state = { version = "19" }
-fil_actor_reward_state = { version = "19" }
-fil_actor_system_state = { version = "19" }
-fil_actor_verifreg_state = { version = "19" }
 fil_actors_shared = { version = "19", features = ["json"] }
-flate2 = "1"
 flume = { workspace = true }
-fs_extra = "1"
 futures = { workspace = true }
 fvm2 = { package = "fvm", version = "~2.10", default-features = false }
 fvm3 = { package = "fvm", default-features = false, version = "~3.12", features = ["arb"] }
@@ -90,60 +55,17 @@ fvm_ipld_encoding = "0.5"
 fvm_shared2 = { package = "fvm_shared", version = "~2.10" }
 fvm_shared3 = { package = "fvm_shared", version = "~3.12", features = ["arb", "proofs"] }
 fvm_shared4 = { package = "fvm_shared", version = "~4.5.3", features = ["arb", "proofs"] }
-gethostname = "1"
-git-version = "0.3"
 group = "0.13"
 hex = { version = "0.4", features = ["serde"] }
-hickory-resolver = { version = "0.25.0-alpha", default-features = false, features = ["system-config", "tokio-runtime"] }
-http = "1"
-human-repr = "1"
-human_bytes = "0.4"
-humantime = "2"
 indexmap = { version = "2", features = ["serde"] }
-indicatif = { version = "0.17", features = ["tokio"] }
 integer-encoding = "4.0"
 ipld-core = { version = "0.4", features = ["serde", "arb"] }
-is-terminal = "0.4"
 itertools = "0.14"
-jsonrpsee = { version = "0.24", features = ["server", "ws-client", "http-client"] }
-jsonwebtoken = "9"
 keccak-hash = "0.11"
-kubert-prometheus-process = "0.1"
-lazy-regex = "3"
-libp2p = { workspace = true, features = [
-  'autonat',
-  'gossipsub',
-  'kad',
-  'identify',
-  'ping',
-  'mdns',
-  'noise',
-  'yamux',
-  'tcp',
-  'quic',
-  'dns',
-  'request-response',
-  'metrics',
-  'tokio',
-  'macros',
-  'serde',
-  'upnp',
-  'rsa',
-  'ecdsa',
-  'ed25519',
-  'secp256k1',
-] }
 libsecp256k1 = "0.7"
-lru = "0.13"
-md5 = { package = "md-5", version = "0.10" }
-memmap2 = "0.9"
-memory-stats = "1"
-multiaddr = "0.18"
 multihash-codetable = { workspace = true }
 multihash-derive = "0.9"
-multimap = "0.10"
 nom = "7"
-nonzero_ext = "0.3"
 num = "0.4"
 num-bigint = "0.4"
 num-derive = "0.4"
@@ -152,30 +74,14 @@ num-traits = "0.2"
 num_cpus = "1"
 nunny = { version = "0.2", features = ["serde", "quickcheck", "schemars"] }
 once_cell = "1"
-openrpc-types = "0.4"
-parity-db = { version = "0.5", default-features = false }
 parking_lot = { version = "0.12", features = ["deadlock_detection"] }
-pathfinding = "4"
 pin-project-lite = "0.2"
 positioned-io = "0.3"
 pretty_assertions = "1"
-prometheus-client = "0.22"
-quick-protobuf = "0.8"
-quick-protobuf-codec = "0.3"
 rand = "0.8"
-rand_distr = "0.4"
-raw_sync_2 = "0.1"
 rayon = "1"
 regex = "1"
-reqwest = { version = "0.12", default-features = false, features = [
-  "stream",
-  "rustls-tls",
-  "json",
-] } # use rustls instead of native (openSSL) tls to drop the number of build dependencies
-rlimit = "0.10"
 rlp = "0.6"
-rs-car-ipfs = "0.3"
-rust2go = { workspace = true }
 schemars = { version = "0.8", features = ["chrono", "uuid1"] }
 scopeguard = "1"
 semver = "1"
@@ -183,84 +89,23 @@ serde = { version = "1", default-features = false, features = ["derive"] }
 serde_ipld_dagcbor = "0.6"
 serde_json = { version = "1", features = ["raw_value"] }
 serde_tuple = "1"
-serde_with = { version = "3", features = ["chrono_0_4"] }
-serde_yaml = "0.9"
 sha2 = { version = "0.10", default-features = false }
-shared_memory = "0.12"
-similar = "2"
-slotmap = "1"
 smallvec = "1"
-smart-default = "0.7"
-stacker = "0.1"
 static_assertions = "1"
-statrs = "0.18"
 strum = { version = "0.27", features = ["derive"] }
 strum_macros = "0.27"
-tabled = "0.18"
 tap = "1"
-tar = "0.4"
 tempfile = "3"
-tera = { version = "1", default-features = false }
 thiserror = "2"
-ticker = "0.1"
 tokio = { version = "1", features = ['full'] }
-tokio-stream = { version = "0.1", features = ["fs", "io-util"] }
 tokio-util = { version = "0.7", features = ["compat", "io-util"] }
-toml = "0.8"
-tower = { version = "0.4", features = ["util"] }
-tower-http = { version = "0.6", features = ["compression-full", "sensitive-headers"] }
-tracing = "0.1"
-tracing-appender = "0.2"
-tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
 unsigned-varint = { version = "0.8", features = ["codec"] }
-url = { version = "2", features = ["serde"] }
 uuid = { version = "1", features = ["v4", "serde"] }
-walkdir = "2"
 zstd = "0.13"
 
 # optional dependencies
-clap_complete = "4.5.46"
-console-subscriber = { version = "0.4", features = ["parking_lot"], optional = true }
 mimalloc = { version = "0.1", optional = true, default-features = false }
 paste = "1"
-tikv-jemallocator = { version = "0.6", optional = true }
-tracing-chrome = { version = "0.7", optional = true }
-tracing-loki = { version = "0.2", default-features = false, features = ["compat-0-2-1", "rustls"], optional = true }
-
-[target.'cfg(unix)'.dependencies]
-termios = "0.3"
-
-[dev-dependencies]
-ariadne = "0.5"
-assert_cmd = "2"
-bimap = "0.6"
-cargo_metadata = "0.19"
-cbor4ii = { version = "0.2", default-features = false, features = ["serde1"] }
-criterion = { version = "0.5", features = ["async_tokio", "csv"] }
-cs_serde_bytes = "0.12"
-derive-quickcheck-arbitrary = "0.1"
-fickle = "0.3"
-fvm_shared3 = { package = "fvm_shared", version = "~3.12", features = ["arb", "proofs", "testing"] }
-fvm_shared4 = { package = "fvm_shared", version = "~4.5.3", features = ["arb", "proofs", "testing"] }
-glob = "0.3"
-http-range-header = "0.4"
-insta = { version = "1", features = ["yaml"] }
-libp2p-swarm-test = { workspace = true }
-num-bigint = { version = "0.4", features = ['quickcheck'] }
-petgraph = "0.7"
-predicates = "3"
-proc-macro2 = { version = "1", default-features = false, features = ["span-locations"] }
-quickcheck = "1"
-quickcheck_async = "0.1"
-quickcheck_macros = "1"
-ra_ap_syntax = "0.0.267"
-regex-automata = "0.4"
-serial_test = "3"
-syn = { version = "2", default-features = false, features = ["full", "parsing", "visit", "printing", "extra-traits"] }
-tokio-test = "0.4"
-
-[build-dependencies]
-rust2go = { workspace = true, features = ["build"] }
 
 # This needs to be set as default. Otherwise, a regular build or test will produce
 # gargantuan artifacts (around 70G for all tests). For a debugging session, you can
@@ -288,37 +133,15 @@ lto = "fat"
 
 # These should be refactored (probably removed) in #2984
 [features]
-default = ["jemalloc", "tokio-console", "tracing-loki", "tracing-chrome"]
+default = []
 slim = ["rustalloc"]
-doctest-private = []                                                      # see lib.rs::doctest_private
-benchmark-private = []                                                    # see lib.rs::benchmark_private
-interop-tests-private = []                                                # see lib.rs::interop_tests_private
+doctest-private = []       # see lib.rs::doctest_private
+benchmark-private = []     # see lib.rs::benchmark_private
+interop-tests-private = [] # see lib.rs::interop_tests_private
 
-# Allocator
 rustalloc = []
-jemalloc = ["dep:tikv-jemallocator"]
 mimalloc = ["dep:mimalloc"]
-
-tokio-console = ["dep:console-subscriber"]
-tracing-loki = ["dep:tracing-loki"]
-tracing-chrome = ["dep:tracing-chrome"]
-
-no-f3-sidecar = []
-
-[[bench]]
-name = "example-benchmark"
-harness = false
-required-features = ["benchmark-private"]
-
-[[bench]]
-name = "car-index"
-harness = false
-required-features = ["benchmark-private"]
 
 [package.metadata.docs.rs]
 # See https://docs.rs/about/metadata
 rustdoc-args = ["--document-private-items"]
-
-[workspace]
-members = ["interop-tests"]
-resolver = "2"

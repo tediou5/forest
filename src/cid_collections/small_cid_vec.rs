@@ -18,7 +18,6 @@ use crate::blocks::TipsetKey;
 /// This may be expanded to have [`smallvec`](https://docs.rs/smallvec/1.11.0/smallvec/index.html)-style indirection
 /// to save more on heap allocations.
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize, PartialOrd, Ord)]
-#[cfg_attr(test, derive(derive_quickcheck_arbitrary::Arbitrary))]
 pub struct SmallCidNonEmptyVec(NonEmpty<SmallCid>);
 
 impl SmallCidNonEmptyVec {
@@ -115,18 +114,6 @@ impl<'de> Deserialize<'de> for SmallCid {
         D: serde::Deserializer<'de>,
     {
         Cid::deserialize(deserializer).map(Into::into)
-    }
-}
-
-/////////////////////
-// Arbitrary impls //
-/////////////////////
-
-#[cfg(test)]
-// Note this goes through MaybeCompactedCid, artificially bumping the probability of compact CIDs
-impl quickcheck::Arbitrary for SmallCid {
-    fn arbitrary(g: &mut quickcheck::Gen) -> Self {
-        Self::from(Cid::from(MaybeCompactedCid::arbitrary(g)))
     }
 }
 

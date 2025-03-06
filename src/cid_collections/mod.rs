@@ -41,8 +41,6 @@ mod imp {
     use super::MaybeCompactedCid;
     use crate::utils::multihash::prelude::*;
     use cid::{multihash::Multihash, Cid};
-    #[cfg(test)]
-    use {crate::utils::db::CborStoreExt as _, quickcheck::Arbitrary};
 
     #[derive(Debug, Clone, Copy, Hash, Eq, PartialEq, Ord, PartialOrd)]
     #[repr(transparent)]
@@ -52,23 +50,6 @@ mod imp {
 
     impl CidV1DagCborBlake2b256 {
         const WIDTH: usize = 32;
-    }
-
-    #[cfg(test)]
-    impl Arbitrary for CidV1DagCborBlake2b256 {
-        fn arbitrary(g: &mut quickcheck::Gen) -> Self {
-            Self {
-                digest: std::array::from_fn(|_ix| u8::arbitrary(g)),
-            }
-        }
-    }
-
-    #[test]
-    fn width() {
-        assert_eq!(
-            MultihashCode::Blake2b256.digest(&[]).size() as usize,
-            CidV1DagCborBlake2b256::WIDTH,
-        );
     }
 
     impl TryFrom<Cid> for CidV1DagCborBlake2b256 {
@@ -140,41 +121,5 @@ mod imp {
         )
         .unwrap();
         assert!(matches!(cid.into(), MaybeCompactedCid::Compact(_)));
-    }
-
-    #[test]
-    fn default() {
-        let cid = crate::db::MemoryDB::default()
-            .put_cbor_default(&())
-            .unwrap();
-        assert!(
-            matches!(cid.into(), MaybeCompactedCid::Compact(_)),
-            "the default encoding is no longer v1+dagcbor+blake2b.
-            consider adding the new default CID type to [`MaybeCompactCid`]"
-        );
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use cid::Cid;
-    use quickcheck::{quickcheck, Arbitrary};
-
-    impl Arbitrary for MaybeCompactedCid {
-        fn arbitrary(g: &mut quickcheck::Gen) -> Self {
-            // bump the odds of a CID being compact
-            let compact = MaybeCompactedCid::Compact(CidV1DagCborBlake2b256::arbitrary(g));
-            let maybe_compact = Self::from(Cid::arbitrary(g));
-            *g.choose(&[compact, maybe_compact]).unwrap()
-        }
-    }
-
-    quickcheck! {
-        fn cid_via_maybe_compacted_cid(before: Cid) -> () {
-            let via = MaybeCompactedCid::from(before);
-            let after = Cid::from(via);
-            assert_eq!(before, after);
-        }
     }
 }

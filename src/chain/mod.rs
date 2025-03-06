@@ -1,7 +1,10 @@
 // Copyright 2019-2025 ChainSafe Systems
 // SPDX-License-Identifier: Apache-2.0, MIT
-pub mod store;
-mod weight;
+mod errors;
+pub use self::errors::*;
+
+// mod weight;
+
 use crate::blocks::Tipset;
 use crate::cid_collections::CidHashSet;
 use crate::db::car::forest;
@@ -14,7 +17,10 @@ use fvm_ipld_blockstore::Blockstore;
 use std::sync::Arc;
 use tokio::io::{AsyncWrite, AsyncWriteExt, BufWriter};
 
-pub use self::{store::*, weight::*};
+/// Disambiguate the type to signify that we are expecting a delta and not an actual epoch/height
+/// while maintaining the same type.
+use crate::shim::clock::ChainEpoch;
+pub type ChainEpochDelta = ChainEpoch;
 
 pub async fn export<D: Digest>(
     db: Arc<impl Blockstore + Send + Sync + 'static>,
